@@ -1,0 +1,27 @@
+using Gen
+using GLMakie
+
+
+@gen function draw_personality_type()
+    personality_type = { :ptype } ~ categorical([.1, .1, .8])
+    yell = { * } ~ generate_behavior(personality_type)
+    return yell
+end
+
+@gen function generate_behavior(ptype::Int)
+    if ptype == 1
+        yell_level = { :ylev } ~ beta(1, 5)
+    elseif ptype == 2
+        yell_level = { :ylev } ~ beta(2, 2)
+    elseif ptype == 3
+        yell_level = { :ylev } ~ beta(5, 1)
+    end
+end
+
+@dist function labeled_cat(labels, probs)
+	index = categorical(probs)
+	labels[index]
+end
+
+
+        
