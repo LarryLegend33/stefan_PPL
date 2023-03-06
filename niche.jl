@@ -2,6 +2,10 @@ using Gen
 using GLMakie
 
 
+# lets create a world of people based on a chinese restaurant process. the world of people will be different
+# based on the concentration parameter alpha in the dichlet process. 
+
+
 @gen function draw_personality_type()
     personality_type = { :ptype } ~ categorical([.2, .6, .2])
     yell = { * } ~ generate_behavior_discrete(personality_type)
@@ -45,7 +49,24 @@ function niche_rejection_sampler(obs_ylev::Int, num_samples::Int)
     return inference_results
 end
 
+
+function enumerate_niche(ptype_possibilities, yell_levels)
+    p_grid = zeros(length(ptype_possibilities), length(yell_levels))
+    for ptype in ptype_possibilities
+        for ylev in yell_levels
+            cmap = choicemap((:ptype, ptype), (:ylev, ylev))
+            tr, w = generate(draw_personality_type, (), cmap)
+            p_grid[ptype, ylev] = exp(w)
+            println(w)
+        end
+    end
+    return p_grid
+end    
+            
     
+    
+
+
         
 
 
