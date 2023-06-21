@@ -61,13 +61,44 @@ function enumerate_niche(ptype_possibilities, yell_levels)
         end
     end
     return p_grid
-end    
+end
+
+function condition(model, args, constraints)
+    tr, w = generate(model, args, constraints)
+    cp = get_score(tr) - w
+    return tr, cp, w
+end
+
             
     
+# (trace, lml_est) = importance_resampling(model::GenerativeFunction,
+#     model_args::Tuple, observations::ChoiceMap, num_samples::Int,
+#     verbose=false)
+
+# (traces, lml_est) = importance_resampling(model::GenerativeFunction,
+#     model_args::Tuple, observations::ChoiceMap,
+#     proposal::GenerativeFunction, proposal_args::Tuple,
+#                                           num_samples::Int, verbose=false)
+
+#function niche_importance_resample(obs_ylev::Int)
     
 
+@gen function draw_animals(animal::String)
+    num_legs = { :num_legs } ~ categorical([.001, .001, .005, .99, .003])
+    has_tail = { :has_tail } ~ bernoulli(.9)
+    is_clifford = { :is_clifford } ~ bernoulli(.1)
+    if !is_clifford 
+        color = { :color } ~ labeled_cat(["yellow", "black", "white", "brown", "red"],
+                                         [.2, .3, .3, .2, 0])
+    else
+        color = { :color } ~ labeled_cat(["yellow", "black", "white", "brown", "red"],
+                                         [0, 0, 0, 0, 1])
+    end
+end
 
-        
+cmap = choicemap((:num_legs, 3))
+tr, w = Gen.generate(draw_animals, ("dog",), cmap)
+get_choices(tr)
 
 
 
