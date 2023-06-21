@@ -89,16 +89,24 @@ end
     is_clifford = { :is_clifford } ~ bernoulli(.1)
     if !is_clifford 
         color = { :color } ~ labeled_cat(["yellow", "black", "white", "brown", "red"],
-                                         [.2, .3, .3, .2, 0])
+                                         [.2, .3, .3, .19, .01])
     else
         color = { :color } ~ labeled_cat(["yellow", "black", "white", "brown", "red"],
-                                         [0, 0, 0, 0, 1])
+                                         [.01, .01, .01, .01, .96])
     end
 end
+
+
+# Write out what is happening here in terms of trace generation and the score. What is special about the trace?
+# What is w? Describe this specifically in the context of the value your constraint takes on with respect to other variables.
+# Find which variable will change w scores if you constrain on the same value for the same variable. 
 
 cmap = choicemap((:num_legs, 3))
 tr, w = Gen.generate(draw_animals, ("dog",), cmap)
 get_choices(tr)
+
+# Add the new function "condition" here, understand what it is doing, and run the dog model within it. What is different about the score returned from
+# condition vs the score returned from generate? Why might this be important in the context of proposals and models? 
 
 
 
